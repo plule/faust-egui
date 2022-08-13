@@ -1,0 +1,20 @@
+[package]
+name = "faust-gui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+egui = "0.18.0"
+eframe = { version = "0.18.0" }
+cpal = "0.13.5"
+faust-types = { git = "https://github.com/plule/rust-faust", branch="type-safe-node-type" }
+faust-state = { git = "https://github.com/plule/rust-faust", branch="type-safe-node-type" }
+
+[build-dependencies]
+faust-build = { git = "https://github.com/plule/rust-faust", branch="type-safe-node-type" }
+
+# https://github.com/grame-cncm/faust/issues/432
+[profile.dev]
+overflow-checks = false
