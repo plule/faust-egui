@@ -25,7 +25,7 @@ fn main() {
     // Start UI
     let native_options = eframe::NativeOptions::default();
     eframe::run_native(
-        format!("Leapotron v{}", VERSION).as_str(),
+        format!("Faust egui {}", VERSION).as_str(),
         native_options,
         Box::new(move |cc| Box::new(ui::DspUi::new(cc, state))),
     );
