@@ -1,4 +1,4 @@
-use egui::Slider;
+use egui::{RichText, Slider};
 use faust_state::{Node, StateHandle};
 
 pub struct DspUi {
@@ -31,7 +31,10 @@ impl eframe::App for DspUi {
                     faust_state::WidgetType::Unknown => panic!("There is an unknown widget."),
                     faust_state::WidgetType::Boolean(input) => match input {
                         faust_state::BooleanKind::Button => {
-                            if ui.button(node.path()).is_pointer_button_down_on() {
+                            if ui
+                                .button(RichText::new(node.path()).heading())
+                                .is_pointer_button_down_on()
+                            {
                                 value = 1.0;
                             } else {
                                 value = 0.0;
