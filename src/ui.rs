@@ -29,55 +29,50 @@ impl eframe::App for DspUi {
                 let mut value = *dsp_state.get_param(*idx).unwrap();
                 match node.widget_type() {
                     faust_state::WidgetType::Unknown => panic!("There is an unknown widget."),
-                    faust_state::WidgetType::Boolean(input) => match input {
-                        faust_state::BooleanKind::Button => {
-                            if ui
-                                .button(RichText::new(node.path()).heading())
-                                .is_pointer_button_down_on()
-                            {
-                                value = 1.0;
-                            } else {
-                                value = 0.0;
-                            }
+                    faust_state::WidgetType::Button => {
+                        if ui
+                            .button(RichText::new(node.path()).heading())
+                            .is_pointer_button_down_on()
+                        {
+                            value = 1.0;
+                        } else {
+                            value = 0.0;
                         }
-                        faust_state::BooleanKind::Toggle => {
-                            let mut state = value > 0.5;
-                            ui.toggle_value(&mut state, node.path());
-                            value = if state { 1.0 } else { 0.0 };
-                        }
-                    },
-                    faust_state::WidgetType::RangedInput(input) => match input.kind {
-                        faust_state::RangedInputKind::VerticalSlider => {
-                            ui.group(|ui| {
-                                ui.label(node.path());
-                                ui.add(
-                                    Slider::new(&mut value, input.range.clone())
-                                        .step_by(input.step.into())
-                                        .vertical(),
-                                );
-                            });
-                        }
-                        faust_state::RangedInputKind::HorizontalSlider => {
-                            ui.group(|ui| {
-                                ui.label(node.path());
-                                ui.add(
-                                    Slider::new(&mut value, input.range.clone())
-                                        .step_by(input.step.into()),
-                                );
-                            });
-                        }
-                        faust_state::RangedInputKind::NumEntry => {
-                            ui.group(|ui| {
-                                ui.add(
-                                    egui::DragValue::new(&mut value)
-                                        .clamp_range(input.range.clone()),
-                                );
-                                ui.label(node.path());
-                            });
-                        }
-                    },
-                    faust_state::WidgetType::RangedOutput(_) => {}
-                }
+                    }
+                    faust_state::WidgetType::Toggle => {
+                        let mut state = value > 0.5;
+                        ui.toggle_value(&mut state, node.path());
+                        value = if state { 1.0 } else { 0.0 };
+                    }
+                    faust_state::WidgetType::VerticalSlider(input) => {
+                        ui.group(|ui| {
+                            ui.label(node.path());
+                            ui.add(
+                                Slider::new(&mut value, input.range.clone())
+                                    .step_by(input.step.into())
+                                    .vertical(),
+                            );
+                        });
+                    }
+                    faust_state::WidgetType::HorizontalSlider(input) => {
+                        ui.group(|ui| {
+                            ui.label(node.path());
+                            ui.add(
+                                Slider::new(&mut value, input.range.clone())
+                                    .step_by(input.step.into()),
+                            );
+                        });
+                    }
+                    faust_state::WidgetType::NumEntry(input) => {
+                        ui.group(|ui| {
+                            ui.add(
+                                egui::DragValue::new(&mut value).clamp_range(input.range.clone()),
+                            );
+                            ui.label(node.path());
+                        });
+                    }
+                    _ => {}
+                };
                 dsp_state.set_param(*idx, value);
             }
 
